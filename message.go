@@ -141,7 +141,7 @@ func (wac *Conn) RevokeMessage(remotejid, msgid string, fromme bool) (revokeid s
 		},
 		Status: &status,
 	}
-	if _, err := wac.Send(revoker); err != nil {
+	if _, _,err := wac.Send(revoker); err != nil {
 		return revocationID, err
 	}
 	return revocationID, nil
