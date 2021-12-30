@@ -104,6 +104,31 @@ func (wac *Conn) Contacts() (*binary.Node, error) {
 func (wac *Conn) Chats() (*binary.Node, error) {
 	return wac.query("chat", "", "", "", "", "", 0, 0)
 }
+type TestWid struct {
+  WID string`json:"wid"`
+}
+// @ brief : 是否是商业号
+// "action","businessProfile",[{"wid":"821056484447@c.us"}], 244
+func (wac *Conn) IsBusiness(ids []string)(<-chan string, error)  {
+  req := make([]*TestWid, 0)
+  for _, v := range ids {
+    req = append(req, &TestWid{WID:v})
+  }
+  data := []interface{}{"query", "businessProfile", req, 244}
+  return wac.writeJson(data)
+}
+
+// @ brief : 获取用户在线状态
+// "action","presence","subscribe","821056484447@c.us"
+func (wac *Conn) IsOnline(jid string)(<-chan string, error)  {
+  data := []interface{}{"action", "presence", "subscribe", jid}
+  return wac.writeJson(data)
+}
+
+// @ brief : 加载头像缩略图
+func (wac *Conn) PhotoThumb(id string)(*binary.Node, error) {
+  return wac.query("ProfilePicThumb", id, "", "", "", "", 0, 0)
+}
 
 func (wac *Conn) Read(jid, id string) (<-chan string, error) {
 	ts := time.Now().Unix()
